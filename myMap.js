@@ -125,17 +125,33 @@ function checkKey(e) {
 				marginBottom : 7,
 				slices : [
 					{
-						max :5, 
+						max :1, 
 						attrs : {
 							fill : "#839cfc"
 						},
-						label :"Less than 5 percent"
+						label :"Less than 1 percent"
+					},
+					{
+						min :1, 
+						max :3, 
+						attrs : {
+							fill : "#7893fc"
+						},
+						label :"Between 1 and 3 percent"
+					},
+					{
+						min :3, 
+						max :5, 
+						attrs : {
+							fill : "#6e8bfc"
+						},
+						label :"Between 3 and 5 percent"
 					},
 					{
 						min :5, 
 						max :10, 
 						attrs : {
-							fill : "#6e8bfc"
+							fill : "#6382fc"
 						},
 						label :"Between 5 and 10 percent"
 					},
@@ -151,7 +167,7 @@ function checkKey(e) {
 						min :15, 
 						max :20, 
 						attrs : {
-							fill : "#4368fc"
+							fill : "#4e71fc"
 						},
 						label :"Between 15 and 20 percent"
 					},
@@ -159,24 +175,32 @@ function checkKey(e) {
 						min :20, 
 						max :25, 
 						attrs : {
-							fill : "#2e57fc"
+							fill : "#4368fc"
 						},
 						label :"Between 20 and 25 percent"
 					},
 					{
 						min :25, 
-						max :30, 
+						max :35, 
+						attrs : {
+							fill : "#2e57fc"
+						},
+						label :"Between 25 and 35 percent"
+					},
+					{
+						min :35, 
+						max :45, 
 						attrs : {
 							fill : "#1846fc"
 						},
-						label :"Between 25 and 30 percent"
+						label :"Between 35 and 50 percent"
 					},
 					{
-						min :30, 
+						min :50, 
 						attrs : {
 							fill : "#0335fc"
 						},
-						label :"More than 30 percent"
+						label :"More than 50 percent"
 					}
 				]
 			}
