@@ -189,7 +189,7 @@ function checkKey(e) {
 					},
 					{
 						min :35, 
-						max :45, 
+						max :50, 
 						attrs : {
 							fill : "#1846fc"
 						},
