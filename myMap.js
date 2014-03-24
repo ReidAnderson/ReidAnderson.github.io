@@ -5,98 +5,97 @@ $(function(){
 	var count = 0;
 	var totalEnergyUsage = {};
 	var adata = {};
-	
+
 
 	$.ajax({
-  url: "lib/data/TotalEnergy.json",
-  dataType: 'json',
-  async: false,
-  data: {},
-  success: function(filedata) {
-		var firstLoop = 0;
-		arrayOfObjects = filedata.allData;
-		for (var i = 0; i < arrayOfObjects.length; i++) {
-			var object = arrayOfObjects[i];
-			if (firstLoop == 0) {
-				
-				for (var k=0; k<arrayOfObjects[i].data.length; k++) {
-					yearData = arrayOfObjects[i].data[k];
-					totalEnergyUsage[yearData[0]] = {};
-					totalEnergyUsage[yearData[0]].areas = {};
+		url: "lib/data/TotalEnergy.json",
+		dataType: 'json',
+		async: false,
+		data: {},
+		success: function(filedata) {
+			var firstLoop = 0;
+			arrayOfObjects = filedata.allData;
+			for (var i = 0; i < arrayOfObjects.length; i++) {
+				var object = arrayOfObjects[i];
+				if (firstLoop == 0) {
+
+					for (var k=0; k<arrayOfObjects[i].data.length; k++) {
+						yearData = arrayOfObjects[i].data[k];
+						totalEnergyUsage[yearData[0]] = {};
+						totalEnergyUsage[yearData[0]].areas = {};
+					}
+					firstLoop = 1;
 				}
-				firstLoop = 1;
-			}
-			for (var j = 0; j<arrayOfObjects[i].data.length; j++) {
-				yearData = arrayOfObjects[i].data[j];
-				//alert(data.toSource());
-				totalEnergyUsage[yearData[0]].areas[arrayOfObjects[i].state] = {
-					"value": yearData[1],
-					"tooltip": {                     "content": yearData[0]+"<br /> Energy Usage: "+yearData[1]}
-				};
+				for (var j = 0; j<arrayOfObjects[i].data.length; j++) {
+					yearData = arrayOfObjects[i].data[j];
+					//alert(data.toSource());
+					totalEnergyUsage[yearData[0]].areas[arrayOfObjects[i].state] = {
+						"value": yearData[1],
+						"tooltip": {                     "content": yearData[0]+"<br /> Energy Usage: "+yearData[1]}
+					};
+				}
 			}
 		}
-  }
-});
+	});
 
 	function initMap (aDataset) {
 		//alert(datasets[aDataset]);
 		loadThis = datasets[aDataset];
-			$.ajax({
-  url: loadThis,
-  dataType: 'json',
-  async: false,
-  data: {},
-  success: function(filedata) {
-		var firstLoop = 0;
-		arrayOfObjects = filedata.allData;
-		for (var i = 0; i < arrayOfObjects.length; i++) {
-			var object = arrayOfObjects[i];
-			if (firstLoop == 0) {
-				
-				for (var k=0; k<arrayOfObjects[i].data.length; k++) {
-					yearData = arrayOfObjects[i].data[k];
-					adata[yearData[0]] = {};
-					adata[yearData[0]].areas = {};
+		$.ajax({
+			url: loadThis,
+			dataType: 'json',
+			async: false,
+			data: {},
+			success: function(filedata) {
+				var firstLoop = 0;
+				arrayOfObjects = filedata.allData;
+				for (var i = 0; i < arrayOfObjects.length; i++) {
+					var object = arrayOfObjects[i];
+					if (firstLoop == 0) {
+
+						for (var k=0; k<arrayOfObjects[i].data.length; k++) {
+							yearData = arrayOfObjects[i].data[k];
+							adata[yearData[0]] = {};
+							adata[yearData[0]].areas = {};
+						}
+						firstLoop = 1;
+					}
+					for (var j = 0; j<arrayOfObjects[i].data.length; j++) {
+						yearData = arrayOfObjects[i].data[j];
+						totalData = totalEnergyUsage[yearData[0]].areas[arrayOfObjects[i].state].value;
+						adata[yearData[0]].areas[arrayOfObjects[i].state] = {
+							"value": (yearData[1]/totalData)*100,
+							"tooltip": {                     "content": filedata.name+"<br /> "+yearData[0]+"<br /> Energy Source Usage: "+yearData[1]+ " " +arrayOfObjects[i].units + "<br /> Percentage: " + Math.round((((yearData[1]/totalData)*100)*100))/100}
+						};
+					}
 				}
-				firstLoop = 1;
 			}
-			for (var j = 0; j<arrayOfObjects[i].data.length; j++) {
-				yearData = arrayOfObjects[i].data[j];
-				totalData = totalEnergyUsage[yearData[0]].areas[arrayOfObjects[i].state].value;
-				adata[yearData[0]].areas[arrayOfObjects[i].state] = {
-					"value": (yearData[1]/totalData)*100,
-					"tooltip": {                     "content": filedata.name+"<br /> "+yearData[0]+"<br /> Energy Source Usage: "+yearData[1]+ " " +arrayOfObjects[i].units + "<br /> Percentage: " + Math.round((((yearData[1]/totalData)*100)*100))/100}
-				};
+		});
+	};
+	initMap(count);
+
+	document.onkeydown = checkKey;
+
+	function checkKey(e) {
+
+		e = e || window.event;
+
+		if (e.keyCode == '39') {
+			// right arrow
+			if ( count < 8) {
+				count++;
+				initMap(count);
+				$(".maparea").trigger('update', [adata[2009], {}, {}, {animDuration : 300}]);
+			}
+		} else if (e.keyCode == '37') {
+			// left arrow
+			if ( count > 0) {
+				count--;
+				initMap(count);
+				$(".maparea").trigger('update', [adata[2009], {}, {}, {animDuration : 300}]);
 			}
 		}
-  }
-});
-	};
-			initMap(count);
-	
-document.onkeydown = checkKey;
-
-function checkKey(e) {
-
-    e = e || window.event;
-
-    if (e.keyCode == '38') {
-        // up arrow
-        if ( count < 8) {
-        count++;
-        initMap(count);
-        $(".maparea").trigger('update', [adata[2009], {}, {}, {animDuration : 300}]);
 	}
-    }
-    else if (e.keyCode == '40') {
-        // down arrow
-                if ( count > 0) {
-        count--;
-        initMap(count);
-        $(".maparea").trigger('update', [adata[2009], {}, {}, {animDuration : 300}]);
-	}
-    }
-}
 
 	// Knob initialisation (for selecting a year)
 	$(".knob").knob({
@@ -118,7 +117,7 @@ function checkKey(e) {
 				}
 			},
 		},
-			legend : {
+		legend : {
 			area : {
 				display : true,
 				title :"Country population", 
@@ -204,7 +203,7 @@ function checkKey(e) {
 					}
 				]
 			}
-			},
-					areas: adata[2009]['areas'] 
-					});
+		},
+		areas: adata[2009]['areas'] 
+	});
 });
